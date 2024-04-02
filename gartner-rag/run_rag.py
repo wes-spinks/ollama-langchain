@@ -13,7 +13,7 @@ from langchain.chains import create_retrieval_chain
 messages = []
 
 
-class ChatWebDoc:
+class ChatAi:
     vector_store = None
     retriever = None
     chain = None
@@ -27,13 +27,9 @@ class ChatWebDoc:
             chunk_size=1024, chunk_overlap=100
         )
         self.prompt = PromptTemplate.from_template(
-            """
-            <s> [INST] You are an assistant for question-answering tasks.
-            You are an expert on Gartner market industries and products in those markets.
-            Use only the following pieces of market context to answer the question.
-            If you don't know the answer, say you don't know.[/INST] </s>
-            [INST] Question: {input}
-            Context: {context}
+            """<s> [INST] You are an assistant for question-answering tasks. You are a trained expert on Gartner market industries and products in those markets. Use only the following pieces of market context to answer the question. If you don't know the answer, say you don't know.[/INST] </s> 
+            [INST] Question: {input} 
+            Context: {context} 
             Answer: [/INST]
             """
         )
@@ -73,8 +69,8 @@ class ChatWebDoc:
         result = self.chain.invoke({"input": query})
 
         print(result["answer"])
-        # for doc in result["context"]:
-        #     print("Source: ", doc.metadata["source"])
+        context = [doc for doc in result["context"]]
+        return result['answer']
 
 
 def read_ingest_data(filepath="markets-and-products.csv"):
@@ -85,13 +81,13 @@ def read_ingest_data(filepath="markets-and-products.csv"):
 
 
 def build():
-    w = ChatWebDoc()
+    w = ChatAi()
     src_csv = read_ingest_data()
     w.ingest(src_csv)
 
 
 def chat():
-    w = ChatWebDoc()
+    w = ChatAi()
 
     w.load()
 
@@ -105,47 +101,3 @@ def chat():
             break
 
         w.ask(query)
-
-
-if len(sys.argv) < 2:
-    chat()
-elif sys.argv[1] == "--ingest":
-    build()
-
-
-def send(chat):
-    messages.append(
-        {
-            "role": "user",
-            "content": chat,
-        }
-    )
-    stream = ollama.chat(
-        model="mistral:instruct",
-        messages=messages,
-        stream=True,
-    )
-
-    response = ""
-    for chunk in stream:
-        part = chunk["message"]["content"]
-        print(part, end="", flush=True)
-        response = response + part
-
-    messages.append(
-        {
-            "role": "assistant",
-            "content": response,
-        }
-    )
-
-    print("")
-
-
-while True:
-    chat = input(">>> ")
-
-    if chat == "/exit":
-        break
-    elif len(chat) > 0:
-        send(chat)
