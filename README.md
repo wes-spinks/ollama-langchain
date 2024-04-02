@@ -15,29 +15,48 @@ Ollama uses llamma.cpp runtimes. See LangChain Docs [local LLMs](https://python.
 
 Gartner RAG sends REST requests to the Ollama server through a very basic chat app. RAG is performed by langchain libraries
 where a list of Gartner URLs are chunked and ingested into a chroma_db vectorstore where retrievals can then occur. Using
-`ChatWebDoc().ask` we can retreive answer contexts from the ingested URLs. This model uses [Mistral 7B](https://mistral.ai/news/announcing-mistral-7b/)
+`ChatAi().ask` we can retreive answer contexts from the ingested URLs. This model uses [Mistral 7B](https://mistral.ai/news/announcing-mistral-7b/)
 (Apache 2.0), and is extremely resource efficient / cost effective.
 
 # gartner-rag
-### running the app
+### STEP 1 - Env Setup
+two options to get the env setup, `pip` & `venv` with `requirements.txt`, or just `poetry`:
 ```
+# option 1
 cd gartner-rag
-pip3 install poetry --user; poetry install && poetry shell
-# OR
-# pip install ollama chromadb langchain langchain-community fastembed beautifulsoup4 poetry
-python3 run-rag.py
-<enter question, receive response>
+brew install poetry; poetry install && poetry shell
+```
+### OR
+```
+# option 2
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements.txt
 ```
 
-### to retrieve/refresh context docs
+### STEP 2 - Build vectorstore from CSV ingest
+# to initially build (or rebuild) the sklearn vectorstore
 ```
-python3 run-rag.py --ingest
-/exit
+python3 -c 'import run_rag; run_rag.build()'
 ```
 
-### Example
+### STEP 3 - Run the web app
+# using `streamlit`
 ```
-wesspinks@wspinks-mac rag2 % python3 run-rag.py
+streamlit run webrag.py
+```
+# `ctrl+c` to close the streamlit app
+
+
+### Streamlit Example
+![streamlit web ui](imgs/st.png)
+
+
+### CLI Example
+```
+wesspinks@wspinks-mac langrag % python3
+>>> import run_rag
+>>> run_rag.chat()
 Fetching 9 files: 100%|████████████████████████████████████████████████████████████████| 9/9 [00:00<00:00, 31352.77it/s]
 >>> what is a warehouse management system?
  A Warehouse Management System (WMS) is a type of software application designed to support the
@@ -55,4 +74,6 @@ optimize inventory, orders,and shipping processes in real-time.
 analyzing machine data to proactively detect and resolve IT service issues quicker. It uses AI and
 machine learning for predictive analysis and correlating data from various sources, enabling IT teams to gain
 real-time insights and improve the performance and availability of their IT services.
+>>> /exit
+>>> exit()
 ```
