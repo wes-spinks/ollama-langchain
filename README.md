@@ -19,40 +19,40 @@ where a list of Gartner URLs are chunked and ingested into a chroma_db vectorsto
 (Apache 2.0), and is extremely resource efficient / cost effective.
 
 # gartner-rag
-### STEP 1 - Env Setup
+## STEP 1 - Env Setup
 two options to get the env setup, `pip` & `venv` with `requirements.txt`, or just `poetry`:
 ```
-# option 1
+### option 1
 cd gartner-rag
 brew install poetry; poetry install && poetry shell
 ```
 ### OR
 ```
-# option 2
+### option 2
 python3 -m venv .venv
 source .venv/bin/activate
 python3 -m pip install -r requirements.txt
 ```
 
-### STEP 2 - Build vectorstore from CSV ingest
-# to initially build (or rebuild) the sklearn vectorstore
+## STEP 2 - Build vectorstore from CSV ingest
+### to initially build (or rebuild) the sklearn vectorstore
 ```
 python3 -c 'import run_rag; run_rag.build()'
 ```
 
-### STEP 3 - Run the web app
-# using `streamlit`
+## STEP 3 - Run the web app
+### using `streamlit`
 ```
 streamlit run webrag.py
 ```
-# `ctrl+c` to close the streamlit app
+### `ctrl+c` to close the streamlit app
 
 
-### Streamlit Example
+## Streamlit Example
 ![streamlit web ui](imgs/st.png)
 
 
-### CLI Example
+## CLI Example
 ```
 wesspinks@wspinks-mac langrag % python3
 >>> import run_rag
