@@ -35,21 +35,21 @@ python3 -m pip install -r requirements.txt
 ```
 
 ## STEP 2 - Build vectorstore from CSV ingest
-### to initially build (or rebuild) the sklearn vectorstore
+to initially build (or rebuild) the sklearn vectorstore
 ```
 python3 -c 'import run_rag; run_rag.build()'
 ```
 
 ## STEP 3 - Run the web app
-### using `streamlit`
+using `streamlit`
 ```
 streamlit run webrag.py
 ```
-### `ctrl+c` to close the streamlit app
+`ctrl+c` to close the streamlit app
 
 
 ## Streamlit Example
-![streamlit web ui](imgs/st.png)
+![streamlit web ui](gartner-rag/imgs/st.png)
 
 
 ## CLI Example
